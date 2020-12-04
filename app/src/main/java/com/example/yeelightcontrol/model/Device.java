@@ -1,5 +1,7 @@
 package com.example.yeelightcontrol.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -84,5 +86,9 @@ public class Device {
             powerState = true;
         }
         return powerState;
+    }
+
+    public String toString() {
+        return description.toString();
     }
 }

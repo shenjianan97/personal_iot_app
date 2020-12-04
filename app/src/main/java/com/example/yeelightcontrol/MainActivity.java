@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yeelightcontrol.model.Device;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -79,5 +80,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     @Override
     public void onDeviceSelected(Device selectedDevice) {
         Log.d(TAG, selectedDevice.getName());
+        Intent i = new Intent(getApplicationContext(), ControlActivity.class);
+        i.putExtra("KEY", selectedDevice.toString());
+        startActivity(i);
     }
 }

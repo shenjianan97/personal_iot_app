@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Yeelight Control</string>
     <string name="discover_button_name">Discover</string>
+    <string name="turnonButton">Turn On</string>
+    <string name="turnoffButton">Turn Off</string>
+    <string name="setBrightnessButton">Set Brightness</string>
+    <string name="setColorTempButton">Set Color Temp</string>
 </resources>

@@ -33,10 +33,20 @@ public class NetworkInformationManager {
     private static RequestQueue requestQueue;
     private static final String serverUrl = "http://192.168.50.198:5002";
     private static final String discoverPath = "discover";
+    private static final String turnonPath = "turnon";
+    private static final String turnoffPath = "turnoff";
+
 
     public interface OnDiscoverListener {
-        // change GUI
         void onSuccess(ArrayList<Device> result);
+
+        void onNetworkFail();
+
+        void onFail(Exception error);
+    }
+
+    public interface OnOffListener {
+        void onSuccess();
 
         void onNetworkFail();
 
@@ -86,58 +96,93 @@ public class NetworkInformationManager {
         requestQueue.add(stringRequest);
     }
 
-//    public void requestConnection(final String token, final String clientUsername, final double bandwidth, final int duration, final OnRequestConnectionListener l) throws JSONException{
-//        /*
-//        {
-//          "token": "string",
-//          "clientUsername": "string",
-//          "sharingConfiguration": {
-//            "bandwidth": 0,
-//            "duration": 0
-//          }
-//        }
-//         */
-//        JSONObject jsonObject = new JSONObject();
-//        JSONObject sharingConfiguration = new JSONObject();
-//        sharingConfiguration.put("bandwidth", bandwidth);
-//        sharingConfiguration.put("duration", duration);
-//        jsonObject.put("token", token);
-//        jsonObject.put("clientUsername", clientUsername);
-//        jsonObject.put("sharingConfiguration", sharingConfiguration);
-//
-//        Log.d(TAG, jsonObject.toString());
-//
-//        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, serverUrl + "/" + requestConnectionPath, jsonObject,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        Log.d(TAG, "request connection response -> " + response.toString());
-//                        try {
-//                            l.onSuccess(response.getString("password"), response.getInt("connectionId"));
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                if (error instanceof NetworkError) {
-//                    l.onNetworkFail();
-//                } else {
-//                    l.onFail();
-//                    Log.e(TAG, error.getMessage(), error);
-//                }
-//            }
-//        }) {
-//
-//            @Override
-//            public Map<String, String> getHeaders() {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("Accept", "application/json");
-//                headers.put("Content-Type", "application/json; charset=UTF-8");
-//                return headers;
-//            }
-//        };
-//        requestQueue.add(jsonRequest);
-//    }
+    public void turnon(final String ip, final OnOffListener l) {
+        /*
+        {
+          "ip": "192.168.50.198"
+        }
+         */
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ip", ip);
+        } catch (JSONException error) {
+            l.onFail(error);
+            return;
+        }
+        Log.d(TAG, jsonObject.toString());
+
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, serverUrl + "/" + turnonPath, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "turn on response" + response.toString());
+                        l.onSuccess();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+                    l.onNetworkFail();
+                } else {
+                    l.onFail(error);
+                    Log.e(TAG, error.getMessage(), error);
+                }
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=UTF-8");
+                return headers;
+            }
+        };
+        requestQueue.add(jsonRequest);
+    }
+
+    public void turnoff(final String ip, final OnOffListener l) {
+        /*
+        {
+          "ip": "192.168.50.198"
+        }
+         */
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("ip", ip);
+        } catch (JSONException error) {
+            l.onFail(error);
+            return;
+        }
+        Log.d(TAG, jsonObject.toString());
+
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, serverUrl + "/" + turnoffPath, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "turn on response" + response.toString());
+                        l.onSuccess();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error instanceof NetworkError) {
+                    l.onNetworkFail();
+                } else {
+                    l.onFail(error);
+                    Log.e(TAG, error.getMessage(), error);
+                }
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=UTF-8");
+                return headers;
+            }
+        };
+        requestQueue.add(jsonRequest);
+    }
 }
